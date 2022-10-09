@@ -92,7 +92,7 @@ By [Master theorem](https://en.wikipedia.org/wiki/Master_theorem_(analysis_of_al
 From [GHC docs](https://downloads.haskell.org/ghc/latest/docs/users_guide/exts/primitives.html): 
   > Most types in GHC are boxed, which means that values of that type are represented by a pointer to a heap object. 
 
-This usually introduces significant overhead both in terms of speed and memory. For instance, you may want to compare these two submisstions: [submission 1](https://atcoder.jp/contests/practice2/submissions/35457740) & [submisstion 2](https://atcoder.jp/contests/practice2/submissions/35457877) (just using boxed vector instead of unboxed in later) and see both time and memory consumption are increased by more than twice.
+This usually introduces significant overhead both in terms of speed and memory. For instance, you may want to compare these two submissions: [submission 1](https://atcoder.jp/contests/practice2/submissions/35457740) & [submission 2](https://atcoder.jp/contests/practice2/submissions/35457877) (just using boxed vector instead of unboxed in later) and see both time and memory consumption are increased by more than twice.
 
 Thus it would be preferable to unbox our `Node` type. And we can do it with help of [`vector-th-unbox`](http://hackage.haskell.org/package/vector-th-unbox). Kindly see the documentation of [`derivingUnbox`](https://hackage.haskell.org/package/vector-th-unbox-0.2.2/docs/Data-Vector-Unboxed-Deriving.html#v:derivingUnbox).
 
@@ -294,7 +294,7 @@ update at start end segTree rangeStart rangeEnd lazyTree updateParam = do
 
 Unfortunately, I couldn't find a problem pertaining to this at atcoder.jp, so decided to explain this with the help of problem, I am familiar with from codeforces.com, viz., [Jamie and To-do List](https://codeforces.com/contest/916/problem/D).
 
-In this problem we construct a [`Map`](https://hackage.haskell.org/package/containers-0.4.0.0/docs/Data-Map.html), whose keys are the given string and value is an unique integer identifier. Why we do this? Well, for this problem, for each seperate day, we maintain a `Map` whose keys are this unique identifier and value is the corresponding priority. Had this `Map` been a map from strings to priority, it would have taken too much space (as we have too many days).
+In this problem we construct a [`Map`](https://hackage.haskell.org/package/containers-0.4.0.0/docs/Data-Map.html), whose keys are the given string and value is an unique integer identifier. Why we do this? Well, for this problem, for each separate day, we maintain a `Map` whose keys are this unique identifier and value is the corresponding priority. Had this `Map` been a map from strings to priority, it would have taken too much space (as we have too many days).
 
 In this problem, suppose our input array has indices from $0$ to maximum priority, $10^9$ and corresponding to these indices, array store _count_ of strings having this priority. Then to answer queries, we construct segment tree from this array where each node maintains _sum_ of its children value. We answer query by simply querying this tree for priorities from 0 to `givenPriority - 1`.
 
@@ -304,6 +304,6 @@ So we can start from empty tree and every time we need to, say add an element, w
 
 Since we have `undo` operations here, we'll construct an array which will store a segment tree for each day. But that does not mean we are copying the entire tree each time. It's like how `Data.Map` works, each insertion in `Map` is $O(\log n)$ meaning, entire tree is not copied. In case of our segment tree, in case of `update`, only nodes related to our update path are updated and they are the ones which require additional memory.
 
-Would suggest now to look at [my solution](./cf_457D2_D_simple.hs) for this problem. Unfortunately, the my solution exceeds the [time limit](https://codeforces.com/contest/916/submission/175215265) of 2 seconds but that doesn't mean it's asymptotically inefficient, infact, for the maxed out test case, my solution runs in around ~5 seconds.
+Would suggest now to look at [my solution](./cf_457D2_D_simple.hs) for this problem. Unfortunately, the my solution exceeds the [time limit](https://codeforces.com/contest/916/submission/175215265) of 2 seconds but that doesn't mean it's asymptotically inefficient, in fact, for the maxed out test case, my solution runs in around ~5 seconds.
 
 Note that since we have recursive data structure (`Node` referring `Node`), I don't think, it makes sense to talk about unboxing it but would love to be corrected.
