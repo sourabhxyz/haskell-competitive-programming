@@ -137,11 +137,11 @@ And if the current interval represented by node lies entirely in the given range
 
 Else, we have case of partial intersection, we recurse on left & right child, and then combine their values.
 
-Why it works should be clear but it's time complexity isn't clear. It's time complexity is $O(h)$ where $h$ represents height of the tree (in our case, it's `k`) and proof of that is [here](https://stackoverflow.com/questions/30236813/segment-tree-query-complexity) (see [this](https://qr.ae/pvcXhT) answer, in case you want help of diagrams).
+Why it works should be clear but it's time complexity isn't clear. It's time complexity is $O(h)$ where $h$ represents height of the tree (in our case, it's $k = \log_2 N$) and proof of that is [here](https://stackoverflow.com/questions/30236813/segment-tree-query-complexity) (see [this](https://qr.ae/pvcXhT) answer, in case you want help of diagrams).
 
 ## Performing point updates on our tree
 
-In case we want to update a single element of our `givenArray`, we can update our tree, in $O(h)$ like so:
+In case we want to update a single element (I call it "point update") of our `givenArray`, we can update our tree, in $O(h)$ like so:
 
 ```haskell
 
@@ -169,7 +169,7 @@ We assumed that number of elements in the array ( $N$ ) to be power of two. In g
 
 ## [Binary search](https://en.wikipedia.org/wiki/Binary_search_algorithm) over segment tree
 
-With regard to query of type `3`, I believe, it's best understood by going through the following code snippet and trying it with the help of comments.
+With regard to query of type `3`, I believe, it's best understood by going through the following code snippet and trying to understand it with the help of comments.
 
 ```haskell
 -- Initially, call `getFirst 1 0 (n - 1) givenQueryStart givenQueryEnd ourSegTree givenValue`
@@ -206,13 +206,13 @@ Now that you have understood these basics, you can write your own solution to [t
 
 ## Lazy tree for range updates
 
-_Maybe it's better to see the below code along with the explaination provided here_.
+_Maybe it's better to see the below code snippet (full code [here](./at_practice2_k.hs)) for [this](https://atcoder.jp/contests/practice2/tasks/practice2_k) problem, along with the explaination provided here_.
 
 We have seen that we can do point updates in $O(h)$ but if we want to update a range consisting of say $r$ elements, then performing point updates $r$ time for each given range element, would result in time complexity of $O(h \times r)$.
 
 Just like how, we returned node's value when we had entire interval represented by our node inside the given range, for query operation. Similarly, when doing range update, if we can just update this node's value without recursing over its children, we would have solved our problem.
 
-So, instead of recursing over children, we can mark them as pending and defer their operation. But what if our parent node got another update in future, parent node's value will get updated for sure, but to add the current operation as pending over children, we would want our operation to be _composable_. That's it.
+So, instead of recursing over children, we can mark them as pending and defer their operation. But what if our parent node got another update in future, parent node's value will get updated for sure, but to add the current operation as pending over children (on top of previous pending operations on them), we would want our operation to be _composable_. That's it.
 
 Below code is snippet of [my submission](./at_practice2_k.hs) for [this](https://atcoder.jp/contests/practice2/tasks/practice2_k) problem.
 
@@ -292,7 +292,7 @@ update at start end segTree rangeStart rangeEnd lazyTree updateParam = do
 
 ## Persistent Segment trees
 
-Unfortunately, I couldn't find a problem pertaining to this at atcoder.jp, so decided to explain this with the help of problem, I am familiar with from codeforces.com, viz., [Jamie and To-do List](https://codeforces.com/contest/916/problem/D).
+Unfortunately, I couldn't find a problem pertaining to this at atcoder.jp, so decided to explain this with the help of problem I am familiar with from codeforces.com, viz., [Jamie and To-do List](https://codeforces.com/contest/916/problem/D).
 
 In this problem we construct a [`Map`](https://hackage.haskell.org/package/containers-0.4.0.0/docs/Data-Map.html), whose keys are the given string and value is an unique integer identifier. Why we do this? Well, for this problem, for each separate day, we maintain a `Map` whose keys are this unique identifier and value is the corresponding priority. Had this `Map` been a map from strings to priority, it would have taken too much space (as we have too many days).
 
@@ -300,10 +300,10 @@ In this problem, suppose our input array has indices from $0$ to maximum priorit
 
 Now, as a usual rule of thumb, computer is able to do $10^8$ operations per second. But here I am saying to construct segment tree over $10^9$ elements. Well, we'll construct segment trees differently this time (yes by using pointers) and since the given number of priorities is bounded by the number of queries (which is $10^5$), we won't have these many nodes in our tree.
 
-So we can start from empty tree and every time we need to, say add an element, we can call point `update` function with `index` being the given priority and value being `1` (here instead of setting left with the given priority, we'll add this priority with value at leaf). And in case of delete (provided the said element exist in our tree, we use our unique identifier to priority `Map` to check this), value would be `-1`.
+So we can start from empty tree and every time we need to, say add an element, we can call point `update` function with `index` being the given priority and value being `1` (here instead of setting leaf with the given priority, we'll add this priority with value at leaf, that is to say, we'll `mappend` to it). And in case of delete (provided the said element exist in our tree, we use our unique identifier to priority `Map` to check this), value would be `-1`.
 
 Since we have `undo` operations here, we'll construct an array which will store a segment tree for each day. But that does not mean we are copying the entire tree each time. It's like how `Data.Map` works, each insertion in `Map` is $O(\log n)$ meaning, entire tree is not copied. In case of our segment tree, in case of `update`, only nodes related to our update path are updated and they are the ones which require additional memory.
 
-Would suggest now to look at [my solution](./cf_457D2_D_simple.hs) for this problem. Unfortunately, the my solution exceeds the [time limit](https://codeforces.com/contest/916/submission/175215265) of 2 seconds but that doesn't mean it's asymptotically inefficient, in fact, for the maxed out test case, my solution runs in around ~5 seconds.
+Would suggest now to look at [my solution](./cf_457D2_D_simple.hs) for this problem. Unfortunately, my solution exceeds the [time limit](https://codeforces.com/contest/916/submission/175215265) of 2 seconds but that doesn't mean it's asymptotically inefficient, in fact, for the maxed out test case, my solution runs in around ~5 seconds.
 
 Note that since we have recursive data structure (`Node` referring `Node`), I don't think, it makes sense to talk about unboxing it but would love to be corrected.
