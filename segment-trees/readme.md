@@ -27,7 +27,7 @@ Each node in the segment tree represents a range (of array) as shown in the belo
 └──────────────────┘     └──────────────────────────┘
      segTree[2]                segTree[3]
      /    \                     /   \
-    /      \          . . .    /     \     4 Nodes, representing intervals of length 2 ^ (k - 1)
+    /      \          . . .    /     \     4 Nodes, representing intervals of length 2 ^ (k - 2)
 segTree[4] segTree[5]   segTree[6]  segTree[7]
                         .
                         .
