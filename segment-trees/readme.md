@@ -4,7 +4,7 @@
 
 Segment tree is a binary tree, useful in solving interval queries over an array.
 
-Suppose we are given an array of length $N = 2 ^ k$ (indexed $1$ to $2 ^ k$) where $k$ is a natural number. And we are interested in say, finding maximum array element in some arbitrary range $(i, j)$ where ($1 \le i \le j \le 2 ^ k$). Naive implementation would be to query over each element in the range, giving worst case complexity of $O(N)$, segment tree's help in making it $O(\log N)$.
+Suppose we are given an array of length $N = 2 ^ k$ (indexed $1$ to $2 ^ k$) where $k$ is a natural number. And we are interested in say, finding maximum array element in some arbitrary range $(i, j)$ where $1 \le i \le j \le 2 ^ k$. Naive implementation would be to query over each element in the range, giving worst case complexity of $O(N)$, segment tree's help in making it $O(\log N)$.
 
 I will, in particular, explain this structure by considering [this](https://atcoder.jp/contests/practice2/tasks/practice2_j) problem.
 
@@ -36,7 +36,7 @@ segTree[4] segTree[5]   segTree[6]  segTree[7]
             Lastly, 2 ^ k nodes each of length 1
 ```
 
-This diagram implies that number of nodes in this tree is: $\sum_{i = 0}^{k} 2 ^ i$ $= 2 ^ {k + 1} - 1$ $= 2N - 1$.
+This diagram implies that number of nodes in this tree is: $\sum_{i = 0}^k 2 ^ i$ $= 2 ^ {k + 1} - 1$ $= 2N - 1$.
 
 We can store this segment tree in an array (say, `segTree`) where we first store root, then its two children from left to right, then their children in left to right order and so on, like in the diagram above.
 
@@ -104,7 +104,7 @@ newtype Node = Node { getValue :: Int }
 derivingUnbox "Node"
   [t|Node -> Int|]
   [|\(Node v) -> v|]
-  [|Node|]
+  [|Node|]  -- is same as `[|\v -> Node v|]`
 ```
 
 This is also the reason, why I like atcoder.jp in contrast to other online judges. They have [rich](https://github.com/haskell-jp/atcoder-haskell-resources/blob/master/spec.md) setup. Whereas, one of the most popular judge, codeforces.com doesn't even have support of vector.
@@ -165,7 +165,7 @@ Why it works and its time complexity should be easy to see.
 
 ### In case number of elements in an array is not power of two
 
-We assumed that number of elements in the array ($N$) to be power of two. In general, we can find a minimum power of two $\ge N$, which is $2 ^ {\lceil {\log_2 N} \rceil}$. In such a case, number of nodes in the tree would be $2 \times 2 ^ {\lceil {\log_2 N} \rceil} - 1$ (and in such a case, our tree won't be dense). Now, assume $N = 2 ^ l + 1$ for some natural number $l$. In, such a case, our bound for number of nodes would become $2 \times 2 ^ {l + 1} - 1$ which is $= 2 \times 2 \times (N - 1) - 1 = 4N - 5$. This is the reason, why at many times, users set the size of their segment tree data structure to be $4N$, although I have set it to $2 \times 2 ^ {\lceil {\log_2 N} \rceil}$ (not $2 \times 2 ^ {\lceil {\log_2 N} \rceil} - 1$ since, my array is one-indexed, so I need a placeholder for `segTree[0]`).
+We assumed that number of elements in the array ( $N$ ) to be power of two. In general, we can find a minimum power of two $\ge N$, which is $2 ^ {\lceil {\log_2 N} \rceil}$. In such a case, number of nodes in the tree would be $2 \times 2 ^ {\lceil {\log_2 N} \rceil} - 1$ (and in such a case, our tree won't be dense). Now, assume $N = 2 ^ l + 1$ for some natural number $l$. In, such a case, our bound for number of nodes would become $2 \times 2 ^ {l + 1} - 1$ which is $= 2 \times 2 \times (N - 1) - 1 = 4N - 5$. This is the reason, why at many times, users set the size of their segment tree data structure to be $4N$, although I have set it to $2 \times 2 ^ {\lceil {\log_2 N} \rceil}$ (not $2 \times 2 ^ {\lceil {\log_2 N} \rceil} - 1$ since, my array is one-indexed, so I need a placeholder for `segTree[0]`).
 
 ## [Binary search](https://en.wikipedia.org/wiki/Binary_search_algorithm) over segment tree
 
