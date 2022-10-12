@@ -22,7 +22,7 @@ import           System.IO
 
 newtype Value = Value Int deriving Eq
 
-data Node = Node { leftChild :: Node, rightChild :: Node, getValue :: Value } | Null deriving Eq
+data Node = Node { leftChild :: !Node, rightChild :: !Node, getValue :: {-# UNPACK #-} !Value } | Null deriving Eq
 
 instance Semigroup Value where
   (Value v1) <> (Value v2) = Value (v1 + v2)
