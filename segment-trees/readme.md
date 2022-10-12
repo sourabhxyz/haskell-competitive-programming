@@ -304,6 +304,6 @@ So we can start from empty tree and every time we need to, say add an element, w
 
 Since we have `undo` operations here, we'll construct an array which will store a segment tree for each day. But that does not mean we are copying the entire tree each time. It's like how `Data.Map` works, each insertion in `Map` is $O(\log n)$ meaning, entire tree is not copied. In case of our segment tree, in case of `update`, only nodes related to our update path are updated and they are the ones which require additional memory.
 
-Would suggest now to look at [my solution](./cf_457D2_D_simple.hs) for this problem. Unfortunately, my solution exceeds the [time limit](https://codeforces.com/contest/916/submission/175215265) of 2 seconds but that doesn't mean it's asymptotically inefficient, in fact, for the maxed out test case, my solution runs in around ~5 seconds.
+Would suggest now to look at [my solution](./cf_457D2_D_simple.hs) for this problem. Unfortunately, my solution exceeds the [time limit](https://codeforces.com/contest/916/submission/175712409) of 2 seconds but that doesn't mean it's asymptotically inefficient, in fact, for the maxed out test case, my solution runs in around ~5 seconds.
 
 Note that since we have recursive data structure (`Node` referring `Node`), I don't think, it makes sense to talk about unboxing it but would love to be corrected.
